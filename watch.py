@@ -4,8 +4,7 @@ import os, json, time, requests
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
 BEARER = os.environ["X_BEARER_TOKEN"]
-TG_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-TG_CHAT  = os.environ["TELEGRAM_CHAT_ID"]
+DISCORD_WEBHOOK_URL = os.environ["DISCORD_WEBHOOK_URL"]
 
 USERNAME = "FabrizioRomano"   # handle to watch, no @
 KEYWORD  = "Everton"      # keyword (use quotes in the rule for exact phrases)
@@ -29,9 +28,8 @@ def set_rules():
 def notify(tweet):
     t = tweet["data"]
     url = f"https://x.com/{USERNAME}/status/{t['id']}"
-    msg = f"🔔 @{USERNAME} matched '{KEYWORD}':\n\n{t['text']}\n\n{url}"
-    requests.post(f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-                  json={"chat_id": TG_CHAT, "text": msg})
+    msg = f"🔔 @{USERNAME} matched:\n{t['text']}\n{url}"
+    requests.post(DISCORD_WEBHOOK, json={"content": msg})
 
 def stream():
     params = {"tweet.fields": "created_at,author_id"}
