@@ -10,7 +10,7 @@ USERNAME = "FabrizioRomano"   # handle to watch, no @
 KEYWORD  = "Everton"      # keyword (use quotes in the rule for exact phrases)
 HASHTAG  = "#EFC"
 
-RULE = f'from:{USERNAME} ("{KEYWORD}" OR {HASHTAG})'
+RULE = f'from:{USERNAME}' # ("{KEYWORD}" OR {HASHTAG})'
 STREAM = "https://api.twitter.com/2/tweets/search/stream"
 RULES  = STREAM + "/rules"
 H = {"Authorization": f"Bearer {BEARER}"}
