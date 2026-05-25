@@ -29,7 +29,7 @@ def notify(tweet):
     t = tweet["data"]
     url = f"https://x.com/{USERNAME}/status/{t['id']}"
     msg = f"🔔 @{USERNAME} matched:\n{t['text']}\n{url}"
-    requests.post(DISCORD_WEBHOOK, json={"content": msg})
+    requests.post(DISCORD_WEBHOOK_URL, json={"content": msg})
 
 def stream():
     params = {"tweet.fields": "created_at,author_id"}
