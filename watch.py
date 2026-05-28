@@ -27,11 +27,14 @@ def set_rules():
     r.raise_for_status()
     print("Rule installed:", r.json())
 
-
 def notify(tweet):
     t = tweet["data"]
     url = f"https://x.com/{USERNAME}/status/{t['id']}"
-    requests.post(DISCORD_WEBHOOK_URL, json={"content": url})
+    msg = f"{t['text']}\n\n{url}"
+    requests.post(DISCORD_WEBHOOK_URL, json={
+        "content": msg,
+        "flags": 4,
+    })
 
 def stream():
     params = {"tweet.fields": "created_at,author_id"}
