@@ -8,9 +8,11 @@ DISCORD_WEBHOOK_URL = os.environ["DISCORD_WEBHOOK_URL"]
 
 USERNAME = "FabrizioRomano"   # handle to watch, no @
 KEYWORD  = "Everton"      # keyword (use quotes in the rule for exact phrases)
+KEYWORD2 = "here we go" 
+KEYWORD3 = "premier league"
 HASHTAG  = "#EFC"
 
-RULE = f'from:{USERNAME}' # ("{KEYWORD}" OR {HASHTAG})'
+RULE = f'from:{USERNAME} ("{KEYWORD}" OR "{KEYWORD2}" OR "{KEYWORD3}" OR {HASHTAG})'
 STREAM = "https://api.twitter.com/2/tweets/search/stream"
 RULES  = STREAM + "/rules"
 H = {"Authorization": f"Bearer {BEARER}"}
@@ -25,11 +27,11 @@ def set_rules():
     r.raise_for_status()
     print("Rule installed:", r.json())
 
+
 def notify(tweet):
     t = tweet["data"]
     url = f"https://x.com/{USERNAME}/status/{t['id']}"
-    msg = f"🔔 @{USERNAME} matched:\n{t['text']}\n{url}"
-    requests.post(DISCORD_WEBHOOK_URL, json={"content": msg})
+    requests.post(DISCORD_WEBHOOK_URL, json={"content": url})
 
 def stream():
     params = {"tweet.fields": "created_at,author_id"}
