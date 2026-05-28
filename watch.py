@@ -48,9 +48,23 @@ def stream():
 
 if __name__ == "__main__":
     set_rules()
+    backoff = 5
     while True:
         try:
             stream()
-        except (ChunkedEncodingError, ConnectionError) as e:
+            backoff = 5   # reset after a clean run
+        except requests.exceptions.HTTPError as e:
+            code = e.response.status_code
+            if code == 429:
+                print(f"429 rate limited — backing off {backoff}s")
+                time.sleep(backoff)
+                backoff = min(backoff * 2, 600)   # exponential, cap 10 min
+            else:
+                print(f"HTTP {code}: {e.response.text}")
+                time.sleep(60)
+        except (ChunkedEncodingError, ConnectionError, requests.exceptions.Timeout) as e:
             print("Reconnecting:", e)
-            time.sleep(5)
+            time.sleep(backoff)
+        except KeyboardInterrupt:
+            print("Shutting down cleanly")
+            break
